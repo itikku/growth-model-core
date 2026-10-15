@@ -1,0 +1,20 @@
+{
+  "name": "growth-model-core",
+  "version": "0.1.0",
+  "description": "A growth model for usage-based B2B products: account funnel, Bass adoption inside accounts, a learning curve, and tokens per workflow, fit from weekly data.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "fit": "tsx cli/fit.ts",
+    "simulate": "tsx cli/simulate.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
+  }
+}

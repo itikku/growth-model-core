@@ -1,0 +1,49 @@
+id,name,seats,provisioned_week,segment,theatre,country,chains
+acct-01,Aster Systems,242,-9,Enterprise,AMER,US,acct-01
+acct-02,Halcyon Motors,212,-5,Enterprise,EMEA,DE,acct-02
+acct-03,Meridian Aerospace,335,-10,Enterprise,AMER,US,acct-03
+acct-04,Bluefin Compute,213,-12,Enterprise,AMER,US,acct-04
+acct-05,Corvid Robotics,321,-8,Enterprise,APAC,JP,acct-05
+acct-06,Lumen Grid,216,-4,Enterprise,EMEA,FR,acct-06
+acct-07,Orion Avionics,263,-9,Enterprise,EMEA,GB,acct-07
+acct-08,Kestrel Mobility,318,-8,Enterprise,APAC,KR,acct-08
+acct-09,Tamarack Power,307,-6,Enterprise,AMER,CA,acct-09
+acct-10,Solstice Devices,237,-7,Enterprise,AMER,US,acct-10
+acct-11,Ironwood Automation,301,-10,Enterprise,EMEA,DE,acct-11
+acct-12,Vela Datacenter Systems,282,-11,Enterprise,AMER,US,acct-12
+acct-13,Cedar Works,64,-6,Mid-market,AMER,US,acct-01
+acct-14,Brightline Thermal,54,-12,Mid-market,AMER,US,acct-02;acct-10
+acct-15,Quarry Power Modules,48,-9,Mid-market,EMEA,DE,acct-03;acct-12
+acct-16,Fenwick Optics,67,-8,Mid-market,EMEA,GB,acct-04;acct-09
+acct-17,Nimbus Interconnect,70,-4,Mid-market,APAC,TW,acct-05;acct-32
+acct-18,Pinecrest Magnetics,44,-11,Mid-market,APAC,JP,acct-06;acct-09;acct-11
+acct-19,Redwater Sensors,41,-12,Mid-market,AMER,US,acct-01;acct-07;acct-33
+acct-20,Granite Packaging,69,-11,Mid-market,APAC,MY,acct-01;acct-08
+acct-21,Willow Battery Systems,52,-8,Mid-market,APAC,KR,acct-02;acct-09
+acct-22,Harbor Photonics,47,-11,Mid-market,APAC,SG,acct-02;acct-10
+acct-23,Copperleaf Drives,64,7,Mid-market,EMEA,DE,acct-02;acct-04;acct-06;acct-11;acct-34
+acct-24,Saltmarsh Cooling,49,15,Mid-market,EMEA,NL,acct-03;acct-12
+acct-25,Juniper RF,74,-11,Mid-market,AMER,US,acct-31
+acct-26,Basalt Semiconductor,54,-12,Mid-market,APAC,TW,acct-07;acct-32;acct-33
+acct-27,Larkspur Controls,73,11,Mid-market,AMER,MX,acct-33
+acct-28,Driftwood Power,60,9,Mid-market,APAC,IN,acct-06;acct-07;acct-34
+acct-29,Thistle Microsystems,46,-10,Mid-market,APAC,JP,acct-31
+acct-30,Alder Heat Exchange,72,12,Mid-market,EMEA,SE,acct-08
+acct-31,Marlow Robotics,6,4,Pilot,AMER,US,acct-31
+acct-32,Peregrine EV,7,8,Pilot,AMER,US,acct-32
+acct-33,Sable Satellites,3,17,Pilot,EMEA,FR,acct-33
+acct-34,Wren Medical Devices,8,11,Pilot,EMEA,IE,acct-34
+acct-35,Fathom Sensors,8,16,Pilot,EMEA,IL,acct-05;acct-12;acct-31;acct-33
+acct-36,Hollis Power,8,6,Pilot,AMER,CA,acct-03;acct-05;acct-08
+acct-37,Briar Microelectronics,6,9,Pilot,APAC,TW,acct-07;acct-09
+acct-38,Quill Thermal,6,5,Pilot,EMEA,GB,acct-31
+acct-39,Ember Assembly,7,14,Pilot,APAC,VN,acct-01;acct-02;acct-04;acct-06;acct-07;acct-09;acct-11;acct-34
+acct-40,Tidewater Electronics Mfg,8,17,Pilot,AMER,MX,acct-02;acct-03;acct-10;acct-12;acct-31
+acct-41,Northstar Fabrication,37,-8,Enterprise,AMER,MX,acct-03;acct-12;acct-31
+acct-42,Keystone Assembly,40,-9,Enterprise,APAC,MY,acct-04;acct-07;acct-09;acct-32;acct-33
+acct-43,Oakridge Contract Mfg,28,17,Mid-market,AMER,US,acct-05;acct-32;acct-33
+acct-44,Summit Board Works,21,-10,Mid-market,APAC,TW,acct-06;acct-07;acct-09;acct-11;acct-31;acct-33;acct-34
+acct-45,Lantern Packaging Services,36,15,Mid-market,APAC,MY,acct-01;acct-02;acct-07;acct-10;acct-31;acct-33
+acct-46,Cobalt Precision,22,19,Mid-market,EMEA,HU,acct-01;acct-08
+acct-47,Mesa Electronics Assembly,18,-10,Mid-market,AMER,MX,acct-02;acct-05;acct-09;acct-10;acct-12;acct-31;acct-33
+acct-48,Riverbend Test & Package,22,-4,Mid-market,APAC,SG,acct-02;acct-03;acct-05;acct-08;acct-10
