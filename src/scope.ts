@@ -2,12 +2,12 @@
 import type { GrowthStage, StageResult } from './stage';
 import type { SimAccount } from './types';
 
-export type ScopeFilter = { theatre?: string; country?: string; chain?: string; accountIds?: string[]; stage?: GrowthStage };
+export type ScopeFilter = { theatre?: string; country?: string; chain?: string; accountIds?: string[]; stages?: GrowthStage[] };
 export type ResolvedScope = { accountIds: string[]; arrivalShare: number };
 
 /**
  * New accounts count toward a scope only when the scope could receive them: everything, a region
- * (in proportion to the region's share of accounts), or the nascent stage. Named accounts and chains get none.
+ * (in proportion to the region's share of accounts), or picked stages that include nascent. Named accounts and chains get none.
  */
 export function resolveScope(accounts: readonly SimAccount[], stages: ReadonlyMap<string, StageResult>, f: ScopeFilter): ResolvedScope {
   const ids = accounts.filter((a) =>
@@ -15,10 +15,10 @@ export function resolveScope(accounts: readonly SimAccount[], stages: ReadonlyMa
     (!f.country || a.country === f.country) &&
     (!f.chain || (a.chains ?? []).includes(f.chain)) &&
     (!f.accountIds?.length || f.accountIds.includes(a.id)) &&
-    (!f.stage || stages.get(a.id)?.stage === f.stage),
+    (!f.stages?.length || f.stages.includes(stages.get(a.id)?.stage as GrowthStage)),
   ).map((a) => a.id);
   let arrivalShare = 0;
-  if (!f.chain && !f.accountIds?.length && (!f.stage || f.stage === 'nascent')) {
+  if (!f.chain && !f.accountIds?.length && (!f.stages?.length || f.stages.includes('nascent'))) {
     const inRegion = accounts.filter((a) => (!f.theatre || a.theatre === f.theatre) && (!f.country || a.country === f.country)).length;
     arrivalShare = accounts.length ? inRegion / accounts.length : 0;
   }

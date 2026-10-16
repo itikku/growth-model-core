@@ -16,6 +16,8 @@ export type BassFit = {
   theta: Map<string, number>; churn: Map<string, number>;
   pSE: number; qSE: number; corrPQ: number;
   ceilingIdentified: boolean; ceilingInterval: [number, number];
+  /** The best fit sits on the top of the search (all seats): the true ceiling may be higher. */
+  ceilingCensored: boolean;
   colleagueShare: number; colleagueShareInterval: [number, number]; colleagueShareSource: 'labels' | 'inferred';
   pairs: number; adoptions: number; churns: number;
   warnings: string[];
@@ -84,8 +86,10 @@ export function fitBass(ix: PanelIndex, window: number): BassFit {
   const best = profile.reduce((a, b) => (b.logLik > a.logLik ? b : a));
   const inside = profile.filter((r) => best.logLik - r.logLik <= 1.92).map((r) => r.ceiling);
   const interval: [number, number] = [Math.min(...inside), Math.max(...inside)];
-  const identified = interval[1] - interval[0] <= 0.3;
-  if (!identified) warnings.push('The data do not pin down the ceiling; it is set to all seats, so ceiling effects are an upper bound.');
+  const censored = grid.length > 1 && best.ceiling >= grid[grid.length - 1] - 1e-9;
+  const identified = !censored && interval[1] - interval[0] <= 0.3;
+  if (censored) warnings.push('The best ceiling is all seats, the top of the search, so the true ceiling may be higher.');
+  else if (!identified) warnings.push('The data do not pin down the ceiling; it is set to all seats, so ceiling effects are an upper bound.');
   const chosen = identified ? best : profile[profile.length - 1];
   const ceiling = chosen.ceiling;
   const rows = design(pairs, seats, ceiling);
@@ -160,7 +164,7 @@ export function fitBass(ix: PanelIndex, window: number): BassFit {
     churn.set(s.account.id, c > 0 ? (c * ((t?.churn ?? 0) + CHURN_SHRINK)) / (c * (t?.n ?? 0) + CHURN_SHRINK) : 0);
   }
   return {
-    p, q, c, ceiling, theta, churn, pSE, qSE, corrPQ, ceilingIdentified: identified, ceilingInterval: interval,
+    p, q, c, ceiling, theta, churn, pSE, qSE, corrPQ, ceilingIdentified: identified, ceilingInterval: interval, ceilingCensored: censored,
     colleagueShare, colleagueShareInterval, colleagueShareSource: labeled ? 'labels' : 'inferred', pairs: rows.length, adoptions, churns, warnings,
   };
 }

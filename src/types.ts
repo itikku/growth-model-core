@@ -94,6 +94,7 @@ export type FitDiagnostics = {
     corrPQ: number;
     ceilingIdentified: boolean;
     ceilingInterval: [number, number];
+    ceilingCensored: boolean; // best fit at all seats, the top of the search: the true ceiling may be higher
     colleagueShare: number; // share of new users who started through a colleague
     colleagueShareInterval: [number, number]; // 95% range
     colleagueShareSource: 'labels' | 'inferred'; // counted from start labels, or inferred from adoption counts

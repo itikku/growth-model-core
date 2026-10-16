@@ -5,12 +5,13 @@ import { curve, fitDepth } from './fit-depth';
 import { fitFunnel } from './fit-funnel';
 import { forecast } from './forecast';
 import { elasticities } from './impact';
-import { LEVERS } from './levers';
+import { applyLever, LEVERS } from './levers';
 import { indexPanel } from './panel';
 import { poissonEM } from './poisson-em';
 import { simulatePanel, type WorldSpec } from './reference';
 import { classifyStages } from './stage';
 import { decompose } from './decompose';
+import { resolveScope } from './scope';
 import { fitModel } from './fit';
 import { TENURE_CAP, type FitResult, type Panel } from './types';
 
@@ -211,6 +212,38 @@ describe('stages and growth decomposition', () => {
     expect(sum).toBeCloseTo(d.log10.tokens, 9);
     expect(d.start.accounts * d.start.people * d.start.depth * d.start.intensity).toBeCloseTo(d.start.tokens, 6);
     expect(fit.global.q).toBeGreaterThan(0);
+  });
+});
+
+describe('levers', () => {
+  it('a worse dial lowers a rate smoothly and never to zero', () => {
+    // Activation fails 81% of the time: "25% worse" must not push failures past 100%.
+    expect(applyLever.activation(0.188, -0.25)).toBeCloseTo(0.141, 3);
+    expect(applyLever.activation(0.188, -0.5)).toBeCloseTo(0.094, 3);
+    // A high rate keeps the failure reading: retention 93.6% at 50% worse = 50% more failures.
+    expect(applyLever.retention(0.936, -0.5)).toBeCloseTo(0.904, 3);
+    for (const v of [0.05, 0.188, 0.5, 0.936]) {
+      const ys = [-0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1].map((x) => applyLever.activation(v, x));
+      for (let i = 1; i < ys.length; i++) expect(ys[i]).toBeGreaterThan(ys[i - 1]);
+      expect(ys[0]).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('scope', () => {
+  const accounts = ['a', 'b', 'c', 'd'].map((id) => ({ id, seats: 10, provisionedWeek: 0 }));
+  const stages = new Map(Object.entries({ a: 'nascent', b: 'stalled', c: 'linear', d: 'compounding' } as const)
+    .map(([id, stage]) => [id, { stage, reason: '', weeklyGrowth: null, reproduction: null }]));
+
+  it('keeps every account in any of the picked stages, and all accounts when none are picked', () => {
+    expect(resolveScope(accounts, stages, { stages: ['stalled', 'linear'] }).accountIds).toEqual(['b', 'c']);
+    expect(resolveScope(accounts, stages, { stages: [] }).accountIds).toEqual(['a', 'b', 'c', 'd']);
+    expect(resolveScope(accounts, stages, {}).accountIds).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('counts new accounts only when the picked stages include nascent', () => {
+    expect(resolveScope(accounts, stages, { stages: ['stalled', 'linear'] }).arrivalShare).toBe(0);
+    expect(resolveScope(accounts, stages, { stages: ['nascent', 'stalled'] }).arrivalShare).toBe(1);
   });
 });
 

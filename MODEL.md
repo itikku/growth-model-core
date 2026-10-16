@@ -34,7 +34,7 @@ expected stops      = c · N
 
 **Without labels**: one Poisson count per pair, `E = p·a + q·b`, fit by EM (monotone; no optimizer library). p and q are then separated only by how N/M varies, so the fit reports their correlation and warns when it exceeds 0.9. Record how people start: it is the single most useful field to add.
 
-**Ceiling**: profile likelihood over ceiling ∈ [max observed N/seats, 1] in steps of 0.05. If the likelihood-ratio interval is wider than 0.3, the data cannot pin it down; the ceiling is set to 1 and flagged, and ceiling effects become an upper bound.
+**Ceiling**: profile likelihood over ceiling ∈ [max observed N/seats, 1] in steps of 0.05. If the best value is 1 (the top of the search), the ceiling is flagged as censored: the true value may be higher, so report it as "at least" the interval's lower end. Otherwise, if the likelihood-ratio interval is wider than 0.3, the data cannot pin it down; the ceiling is set to 1 and flagged, and ceiling effects become an upper bound.
 
 **Pilot team**: the average number of engineers engaged in an account's first active week.
 
@@ -53,13 +53,13 @@ ln K = account level + trend · week, with the trend pooled within accounts over
 
 ## Forecast
 
-Deterministic expected values, 26 weeks, summed over the scope. For each account: the funnel state distribution moves one week at a time; engaged engineers are tracked **per funnel state** as a histogram over tenure (accounts that stay active also accumulate more engineers; averaging them separately understates growth by ~15%); Bass steps happen only in active weeks; the first active week brings the pilot team. New accounts arrive at the fitted rate when the scope can receive them (everything, a region in proportion to its share of accounts, or the nascent stage). No new launches are assumed.
+Deterministic expected values, 26 weeks, summed over the scope. For each account: the funnel state distribution moves one week at a time; engaged engineers are tracked **per funnel state** as a histogram over tenure (accounts that stay active also accumulate more engineers; averaging them separately understates growth by ~15%); Bass steps happen only in active weeks; the first active week brings the pilot team. New accounts arrive at the fitted rate when the scope can receive them (everything, a region in proportion to its share of accounts, or picked stages that include nascent). No new launches are assumed.
 
 Accuracy: within ~4% of the mean of 120 stochastic runs on the same parameters; a 12-week backtest on a constant-parameter world lands within ±40% per seed (average +12%).
 
 ## Levers and elasticities
 
-A lever is a parameter. "10% better" means: for weekly account probabilities, 10% fewer failures (stuck, going quiet, staying quiet); for engineer churn, 10% less; for everything else, 10% more. Elasticity = (26-week tokens with the change ÷ baseline − 1) ÷ 10%.
+A lever is a parameter. "10% better" means: for weekly account probabilities, 10% fewer failures (stuck, going quiet, staying quiet); for engineer churn, 10% less; for everything else, 10% more. A negative value makes a weekly account probability worse by the gentler of "x% fewer successes" and "x% more failures", so a rate that mostly fails falls smoothly instead of hitting zero. Elasticity = (26-week tokens with the change ÷ baseline − 1) ÷ 10%.
 
 Two kinds: **scale levers** (usage at full experience, tokens per workflow) multiply output and read about 1 everywhere; **growth levers** depend on where each account stands, and are the ones that tell you where to focus.
 

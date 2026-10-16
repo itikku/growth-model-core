@@ -63,7 +63,7 @@ export function fitIndexed(ix: PanelIndex, opts: FitOptions = {}): FitResult {
       funnel: funnel.intervals,
       bass: {
         pairs: bass.pairs, adoptions: bass.adoptions, churns: bass.churns, pSE: bass.pSE, qSE: bass.qSE, corrPQ: bass.corrPQ,
-        ceilingIdentified: bass.ceilingIdentified, ceilingInterval: bass.ceilingInterval, colleagueShare: bass.colleagueShare,
+        ceilingIdentified: bass.ceilingIdentified, ceilingInterval: bass.ceilingInterval, ceilingCensored: bass.ceilingCensored, colleagueShare: bass.colleagueShare,
         colleagueShareInterval: bass.colleagueShareInterval, colleagueShareSource: bass.colleagueShareSource,
       },
       depth: { cells: depth.cells, engineerWeeks: depth.engineerWeeks, logLik: depth.logLik },
