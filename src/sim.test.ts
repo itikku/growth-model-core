@@ -228,6 +228,15 @@ describe('levers', () => {
       expect(ys[0]).toBeGreaterThan(0);
     }
   });
+
+  it('a better dial never lowers a rate that is already above the 99.5% cap', () => {
+    // Retention of 99.8% a week (an account that rarely churns): the baseline keeps it, and better keeps it.
+    expect(applyLever.retention(0.998, 0)).toBe(0.998);
+    expect(applyLever.retention(0.998, 0.1)).toBe(0.998);
+    expect(applyLever.retention(0.99, 0.9)).toBe(0.995);
+    const ys = [-0.1, -0.05, -0.01, 0, 0.01, 0.1].map((x) => applyLever.retention(0.998, x));
+    for (let i = 1; i < ys.length; i++) expect(ys[i]).toBeGreaterThanOrEqual(ys[i - 1]);
+  });
 });
 
 describe('scope', () => {

@@ -3,7 +3,8 @@
 // 10% fewer accounts stay stuck, go quiet, or stay quiet that week. So a broken step (activation at 3%)
 // gets a large lever, as it should. Engineer churn falls by 10%; every other lever grows by 10%.
 // A negative value makes a rate worse by the gentler of "x% fewer successes" and "x% more failures", so a rate
-// that mostly fails (activation at 19%) falls smoothly instead of collapsing to zero.
+// that mostly fails (activation at 19%) falls smoothly instead of collapsing to zero. A better rate caps at 99.5%,
+// but never below where it already is, so a rate above the cap is left alone.
 export type LeverId = 'arrivals' | 'activation' | 'retention' | 'recovery' | 'p' | 'q' | 'c' | 'ceiling' | 'dMax' | 'lambda' | 'k';
 export type Levers = Partial<Record<LeverId, number>>;
 
@@ -33,7 +34,7 @@ export const LEVER_BY_ID = Object.fromEntries(LEVERS.map((l) => [l.id, l])) as R
 
 const up = (v: number, x = 0) => v * (1 + x);
 const fewerFailures = (v: number, x = 0) =>
-  x >= 0 ? Math.min(0.995, 1 - (1 - v) * (1 - x)) : Math.max(0, v * (1 + x), 1 - (1 - v) * (1 - x));
+  x >= 0 ? Math.max(v, Math.min(0.995, 1 - (1 - v) * (1 - x))) : Math.max(0, v * (1 + x), 1 - (1 - v) * (1 - x));
 
 /** The lever's effect on one parameter value. */
 export const applyLever = {
