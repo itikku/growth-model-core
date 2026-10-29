@@ -18,4 +18,4 @@ const world: WorldSpec = mod.default;
 mkdirSync(out, { recursive: true });
 const panel = simulatePanel(world, seed);
 writePanel(out, panel);
-console.log(`Wrote ${panel.accounts.length} accounts, ${panel.accountWeeks.length} account-weeks, ${panel.engineerWeeks.length} engineer-weeks to ${out}`);
+console.log(`Wrote ${panel.accounts.length} accounts, ${panel.accountWeeks.length} account-weeks, ${panel.engineerWeeks.length} user-weeks to ${out}`);

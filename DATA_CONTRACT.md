@@ -7,7 +7,7 @@ Three CSV files (or tables) in one folder. Weeks are integers (for example ISO w
 | Column | Required | Meaning |
 |---|---|---|
 | `id` | yes | Account ID. |
-| `seats` | yes | Engineers the product could reach at this account (licensed seats, or headcount in the target roles). Sets the adoption ceiling. |
+| `seats` | yes | Users the product could reach at this account (licensed seats, or headcount in the target roles). Sets the adoption ceiling. |
 | `provisioned_week` | yes | First week the account could use the product (contract start, workspace created, or security approval). |
 | `name` | no | For reports. |
 | `segment` | no | For example Enterprise / Mid-market / Pilot. |
@@ -92,5 +92,5 @@ left join starts s using (account_id, engineer_id, week);
 
 - Every `account_weeks` row with `workflows > 0` has at least one `engineer_weeks` row.
 - `credited` sums to `workflows` per account-week (± batch work with no viewer).
-- Engaged engineers per account-week ≤ `seats`.
+- Engaged users per account-week ≤ `seats`.
 - At least 20 weeks of history, and some accounts that started inside it (for activation and the pilot team).

@@ -22,7 +22,7 @@ export function fitIndexed(ix: PanelIndex, opts: FitOptions = {}): FitResult {
   const seatPool = arrived.length ? arrived : ix.series;
   const arrivalSeats = seatPool.reduce((a, s) => a + s.account.seats, 0) / Math.max(1, seatPool.length);
 
-  // Pilot team: engineers engaged in the first active week, for accounts whose start we observed.
+  // Pilot team: users engaged in the first active week, for accounts whose start we observed.
   const firsts = ix.series.filter((s) => s.firstActive !== null && s.firstActive > ix.firstWeek).map((s) => s.engaged[s.weeks.indexOf(s.firstActive!)]);
   const startTeam = firsts.length ? firsts.reduce((a, b) => a + b, 0) / firsts.length : 1;
 

@@ -1,5 +1,5 @@
 // Growth model core. One identity, four fitted parts:
-//   tokens = active accounts × engaged engineers per account × workflows per engineer × tokens per workflow
+//   tokens = active accounts × engaged users per account × workflows per user × tokens per workflow
 export * from './types';
 export { fitModel, fitIndexed } from './fit';
 export { indexPanel, type PanelIndex } from './panel';

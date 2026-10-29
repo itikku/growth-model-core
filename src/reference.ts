@@ -1,4 +1,4 @@
-// Stochastic reference simulator: draws a Panel from known parameters, engineer by engineer, with
+// Stochastic reference simulator: draws a Panel from known parameters, user by user, with
 // exactly the model the fitter assumes. Used to test that fitting recovers the truth, and to make
 // sample data for a world described only by its parameters (World A, B, or a new World C).
 import { curve } from './fit-depth';
@@ -11,7 +11,7 @@ export type WorldSpec = {
   accounts: SimAccount[];
   funnel: FunnelRates;
   p: number; q: number; c: number; ceiling: number;
-  startTeam?: number; // engineers who start together in an account's first active week (default 1)
+  startTeam?: number; // users who start together in an account's first active week (default 1)
   dMax: number; d0: number; lambda: number;
   kLevel: number; // ln(tokens per workflow) at week 0
   kTrend: number; // weekly change in ln(tokens per workflow)
@@ -30,8 +30,8 @@ export function simulatePanel(spec: WorldSpec, seed: string): Panel {
     const reach = Math.max(1, Math.round(spec.ceiling * acct.seats));
     const theta = spec.theta?.[acct.id] ?? 1;
     const mu = spec.depthMult?.[acct.id] ?? 1;
-    const tenure = new Map<number, number>(); // engineer index → tenure
-    const via = new Map<number, 'colleague' | 'outreach'>(); // how engineers who started this week started
+    const tenure = new Map<number, number>(); // user index → tenure
+    const via = new Map<number, 'colleague' | 'outreach'>(); // how users who started this week started
     let everActive = false;
     let quiet = 0;
     for (let w = acct.provisionedWeek; w <= spec.lastWeek; w++) {
@@ -57,7 +57,7 @@ export function simulatePanel(spec: WorldSpec, seed: string): Panel {
           }
         }
         if (next.size === 0) {
-          // An active account always has someone engaged: one reachable engineer starts (a forced adoption).
+          // An active account always has someone engaged: one reachable user starts (a forced adoption).
           const free = Array.from({ length: reach }, (_, e) => e).filter((e) => !tenure.has(e));
           const e = free.length ? free[Math.floor(rng.next() * free.length)] : 0;
           next.set(e, 0);

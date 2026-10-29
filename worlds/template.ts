@@ -11,7 +11,7 @@ const world: WorldSpec = {
   firstWeek: -12, lastWeek: 25, accounts: sampleAccounts(),
   funnel: { activation: 0.2, retention: 0.9, atRisk: 0.5, lapsed: 0.1, dormant: 0.05 }, // account funnel
   p: 0.01, q: 0.05, c: 0.05, ceiling: 0.8, startTeam: 2, // adoption inside each account
-  dMax: 3, d0: 0.3, lambda: 0.15, // learning curve: workflows per engineer-week
+  dMax: 3, d0: 0.3, lambda: 0.15, // learning curve: workflows per user-week
   kLevel: Math.log(10_000), kTrend: 0.01, // tokens per workflow
   labelStarts: true, // record how each person started
 };

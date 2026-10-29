@@ -15,7 +15,7 @@ Read [MODEL.md](MODEL.md) and [DATA_CONTRACT.md](DATA_CONTRACT.md) end to end.
 
 1. Find the tables for accounts (contracts, seats, regions), product events, and units of usage or billing.
 2. **Ask** which action counts as a *meaningful workflow* (value someone used, not a click). Propose one from the events you found, with counts.
-3. **Ask** what `seats` should mean (licensed seats, or engineers in the target roles) and which date makes an account `provisioned`.
+3. **Ask** what `seats` should mean (licensed seats, or users in the target roles) and which date makes an account `provisioned`.
 4. Find how people start: invites, shared links, review requests (= `colleague`); training, demos, campaigns, or direct sign-ups (= `outreach`). If nothing records it, say so: the model still runs, but the colleague-vs-outreach split will be inferred and less reliable. Suggest the event to add.
 5. Write the SQL (see the sketch in DATA_CONTRACT.md) and export the three CSVs to a folder **outside this repo** (it may hold customer data).
 
@@ -23,7 +23,7 @@ Do not change a definition without asking. Write every definition you used into 
 
 ## 2. Check the data
 
-Run the checks at the end of DATA_CONTRACT.md and report the results. Also report: weeks of history, accounts, accounts that started inside the window, engaged engineer-weeks, and the share of starts with `started_via`. Fix mapping problems before fitting.
+Run the checks at the end of DATA_CONTRACT.md and report the results. Also report: weeks of history, accounts, accounts that started inside the window, engaged user-weeks, and the share of starts with `started_via`. Fix mapping problems before fitting.
 
 ## 3. Fit and validate
 
@@ -42,7 +42,7 @@ Before you interpret anything:
 
 Write a short report for a non-technical team:
 
-1. **Where growth came from**: the four-part growth split, as multiples (for example "accounts ×1.4, engineers per account ×6, workflows per engineer ×12, tokens per workflow ×14").
+1. **Where growth came from**: the four-part growth split, as multiples (for example "accounts ×1.4, users per account ×6, workflows per user ×12, tokens per workflow ×14").
 2. **Where accounts stand**: counts per growth stage, and what share of recent usage each stage holds.
 3. **What to do next**: the top 3 growth levers for the whole business, and for each region, with the size of each effect ("10% better adoption from colleagues adds X% tokens over 26 weeks"). Separate scale levers from growth levers.
 4. **What would make this more reliable**: missing fields, short history, wide ranges.

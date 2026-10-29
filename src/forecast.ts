@@ -4,7 +4,7 @@
 //   people:  adopt = θ(p + q·N/M)(M − N)⁺;  n ← shift(n)·(1 − c) + adopt at tenure 0   (only in active weeks)
 //   depth:   workflows = μ · Σ_τ E[n[τ]; active] · g(τ)
 //   tokens:  workflows · K,  ln K = level + trend · φ(1 − φ^h)/(1 − φ)
-// Engineers are tracked per funnel state, so activity and team size stay correlated as they are in the data.
+// Users are tracked per funnel state, so activity and team size stay correlated as they are in the data.
 // New accounts arrive at the fitted rate.
 import { applyLever, type Levers } from './levers';
 import { ACT, NA, QUIET_CAP, STATES, quiet } from './panel';
@@ -38,10 +38,10 @@ function moves(f: FunnelRates): [number, number][][] {
 }
 
 /**
- * Path of one account, `h` weeks ahead, from a funnel state and its engaged engineers by tenure.
- * Engineers are tracked separately for each funnel state (J[s] = expected histogram × P(state s)),
- * because accounts that stay active also accumulate more engineers. Engineers grow only in active weeks;
- * a first activation brings the pilot team (fitted: engineers engaged in a first active week).
+ * Path of one account, `h` weeks ahead, from a funnel state and its engaged users by tenure.
+ * Users are tracked separately for each funnel state (J[s] = expected histogram × P(state s)),
+ * because accounts that stay active also accumulate more users. Users grow only in active weeks;
+ * a first activation brings the pilot team (fitted: users engaged in a first active week).
  */
 function project(r: Run, state0: number, n0: readonly number[], h: number): Path {
   const B = TENURE_CAP + 1;
@@ -70,7 +70,7 @@ function project(r: Run, state0: number, n0: readonly number[], h: number): Path
         } else if (s === NA) {
           J2[dst] += mass * r.startTeam; // first active week: the pilot team
         } else {
-          // Bass step on this state's expected engineers (J / π = the conditional histogram).
+          // Bass step on this state's expected users (J / π = the conditional histogram).
           let total = 0;
           for (let tau = 0; tau < B; tau++) total += J[base + tau];
           total /= ps;

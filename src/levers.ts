@@ -1,10 +1,9 @@
 // Levers are the model's parameters. A lever value is a change in the "better" direction: 0.1 = 10% better.
 // Weekly account probabilities (activation, retention, win-back) improve by cutting failures: +10% means
 // 10% fewer accounts stay stuck, go quiet, or stay quiet that week. So a broken step (activation at 3%)
-// gets a large lever, as it should. Engineer churn falls by 10%; every other lever grows by 10%.
+// gets a large lever, as it should. User churn falls by 10%; every other lever grows by 10%.
 // A negative value makes a rate worse by the gentler of "x% fewer successes" and "x% more failures", so a rate
-// that mostly fails (activation at 19%) falls smoothly instead of collapsing to zero. A better rate caps at 99.5%,
-// but never below where it already is, so a rate above the cap is left alone.
+// that mostly fails (activation at 19%) falls smoothly instead of collapsing to zero.
 export type LeverId = 'arrivals' | 'activation' | 'retention' | 'recovery' | 'p' | 'q' | 'c' | 'ceiling' | 'dMax' | 'lambda' | 'k';
 export type Levers = Partial<Record<LeverId, number>>;
 
@@ -22,19 +21,19 @@ export const LEVERS: LeverMeta[] = [
   { id: 'activation', label: 'Activation', group: 'accounts', scale: false, description: 'Fewer provisioned accounts staying stuck each week before their first use.' },
   { id: 'retention', label: 'Account retention', group: 'accounts', scale: false, description: 'Fewer active accounts going quiet each week (the weekly drop-off rate falls).' },
   { id: 'recovery', label: 'Win-back of quiet accounts', group: 'accounts', scale: false, description: 'Fewer quiet accounts staying quiet each week.' },
-  { id: 'p', label: 'Adoption from outreach (p)', group: 'people', scale: false, description: 'Engineers who start because of training, marketing, or sales, independent of colleagues.' },
-  { id: 'q', label: 'Adoption from colleagues (q)', group: 'people', scale: false, description: 'Engineers who start because colleagues use it; grows with the share already using it.' },
-  { id: 'c', label: 'Engineer retention', group: 'people', scale: false, description: 'Fewer engaged engineers stopping each week.' },
-  { id: 'ceiling', label: 'Reachable engineers', group: 'people', scale: false, description: 'More engineers who could use it in each account (new teams, new seats).' },
-  { id: 'lambda', label: 'Learning speed', group: 'depth', scale: false, description: 'How fast a new engineer reaches full usage.' },
-  { id: 'dMax', label: 'Usage at full experience', group: 'depth', scale: true, description: 'Workflows per week by an experienced engineer.' },
+  { id: 'p', label: 'Adoption from outreach (p)', group: 'people', scale: false, description: 'Users who start because of training, marketing, or sales, independent of colleagues.' },
+  { id: 'q', label: 'Adoption from colleagues (q)', group: 'people', scale: false, description: 'Users who start because colleagues use it; grows with the share already using it.' },
+  { id: 'c', label: 'User retention', group: 'people', scale: false, description: 'Fewer engaged users stopping each week.' },
+  { id: 'ceiling', label: 'Reachable users', group: 'people', scale: false, description: 'More users who could use it in each account (new teams, new seats).' },
+  { id: 'lambda', label: 'Learning speed', group: 'depth', scale: false, description: 'How fast a new user reaches full usage.' },
+  { id: 'dMax', label: 'Usage at full experience', group: 'depth', scale: true, description: 'Workflows per week by an experienced user.' },
   { id: 'k', label: 'Tokens per workflow', group: 'intensity', scale: true, description: 'Compute per workflow: bigger jobs, batches and sweeps, heavier workloads.' },
 ];
 export const LEVER_BY_ID = Object.fromEntries(LEVERS.map((l) => [l.id, l])) as Record<LeverId, LeverMeta>;
 
 const up = (v: number, x = 0) => v * (1 + x);
 const fewerFailures = (v: number, x = 0) =>
-  x >= 0 ? Math.max(v, Math.min(0.995, 1 - (1 - v) * (1 - x))) : Math.max(0, v * (1 + x), 1 - (1 - v) * (1 - x));
+  x >= 0 ? Math.min(0.995, 1 - (1 - v) * (1 - x)) : Math.max(0, v * (1 + x), 1 - (1 - v) * (1 - x));
 
 /** The lever's effect on one parameter value. */
 export const applyLever = {

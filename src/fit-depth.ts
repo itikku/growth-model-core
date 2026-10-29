@@ -1,6 +1,6 @@
-// Depth: workflows credited to an engaged engineer in a week.
+// Depth: workflows credited to an engaged user in a week.
 //   E[credited] = μ_i · m_t · g(τ),   g(τ) = Dmax − (Dmax − D0) · e^(−λτ)
-// τ = the engineer's tenure (active weeks of experience), μ_i = account multiplier,
+// τ = the user's tenure (active weeks of experience), μ_i = account multiplier,
 // m_t = calendar-week multiplier (launches, seasons), normalized to 1 over the last 4 weeks.
 // Fit by block-coordinate ascent on the Poisson likelihood.
 import type { PanelIndex } from './panel';
@@ -21,7 +21,7 @@ export const curve = (dMax: number, d0: number, lambda: number, tau: number) => 
 
 export function fitDepth(ix: PanelIndex): DepthFit {
   const warnings: string[] = [];
-  // Cells (account, week, tenure) with total credited Y and engineer-weeks n.
+  // Cells (account, week, tenure) with total credited Y and user-weeks n.
   const key = (a: string, w: number, t: number) => `${a}|${w}|${t}`;
   const cellMap = new Map<string, { a: string; w: number; t: number; y: number; n: number }>();
   for (const o of ix.tenureObs) {
@@ -37,10 +37,10 @@ export function fitDepth(ix: PanelIndex): DepthFit {
   const m = new Map<number, number>();
   for (const c of cells) m.set(c.w, 1);
   if (!cells.length) {
-    warnings.push('No engaged engineer-weeks; depth cannot be fit.');
+    warnings.push('No engaged user-weeks; depth cannot be fit.');
     return { dMax: 0, d0: 0, lambda: 0.3, mu, m, logLik: 0, cells: 0, engineerWeeks: 0, warnings };
   }
-  if (cells.every((c) => c.t === 0)) warnings.push('No engineer stayed engaged twice; the learning rate is a placeholder.');
+  if (cells.every((c) => c.t === 0)) warnings.push('No user stayed engaged twice; the learning rate is a placeholder.');
 
   let dMax = 1, d0 = 1, lambda = 0.3;
   const g = (t: number) => curve(dMax, d0, lambda, t);

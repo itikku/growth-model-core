@@ -54,17 +54,17 @@ const report = {
 };
 if (opt('out')) writeFileSync(opt('out')!, JSON.stringify(report, null, 2));
 
-console.log(`\nData: ${panel.accounts.length} accounts, weeks ${panel.firstWeek}–${panel.lastWeek}, ${panel.engineerWeeks.length} engaged engineer-weeks.`);
+console.log(`\nData: ${panel.accounts.length} accounts, weeks ${panel.firstWeek}–${panel.lastWeek}, ${panel.engineerWeeks.length} engaged user-weeks.`);
 console.log('\nAccount funnel (weekly):');
 for (const [k, v] of Object.entries(d.funnel)) console.log(`  ${k.padEnd(10)} ${pct(v.value)}  (95%: ${pct(v.lo, 0)}–${pct(v.hi, 0)}, n=${v.n})`);
-console.log(`  new accounts per week: ${g.arrivalsPerWeek.toFixed(2)}; pilot team: ${g.startTeam.toFixed(1)} engineers`);
+console.log(`  new accounts per week: ${g.arrivalsPerWeek.toFixed(2)}; pilot team: ${g.startTeam.toFixed(1)} users`);
 console.log('\nAdoption inside accounts (Bass):');
 console.log(`  outreach p ${pct(g.p, 2)}/wk ±${pct(2 * d.bass.pSE, 2)}; colleagues q ${pct(g.q)}/wk ±${pct(2 * d.bass.qSE)}; churn c ${pct(g.c)}/wk; reachable ${pct(g.ceiling, 0)} of seats`);
 console.log(`  new users who started through a colleague: ${pct(d.bass.colleagueShare, 0)} (${pct(d.bass.colleagueShareInterval[0], 0)}–${pct(d.bass.colleagueShareInterval[1], 0)}, ${d.bass.colleagueShareSource})`);
-console.log(`\nLearning curve: ${g.d0.toFixed(2)} → ${g.dMax.toFixed(2)} workflows per engineer-week, λ ${g.lambda.toFixed(3)}/wk`);
+console.log(`\nLearning curve: ${g.d0.toFixed(2)} → ${g.dMax.toFixed(2)} workflows per user-week, λ ${g.lambda.toFixed(3)}/wk`);
 console.log(`Tokens per workflow: ${Math.round(Math.exp(g.kLevel)).toLocaleString('en-US')} (trend ${pct(g.kTrend)}/wk, damped)`);
 console.log(`\nGrowth stages: ${STAGES.map((s) => `${s} ${stageCounts[s]}`).join(', ')}`);
-console.log(`\nGrowth split, weeks ${start}–${start + 2} vs. ${panel.lastWeek - 2}–${panel.lastWeek} (log10): accounts ${split.log10.accounts.toFixed(2)} + engineers ${split.log10.people.toFixed(2)} + depth ${split.log10.depth.toFixed(2)} + tokens/workflow ${split.log10.intensity.toFixed(2)} = ${split.log10.tokens.toFixed(2)}`);
+console.log(`\nGrowth split, weeks ${start}–${start + 2} vs. ${panel.lastWeek - 2}–${panel.lastWeek} (log10): accounts ${split.log10.accounts.toFixed(2)} + users ${split.log10.people.toFixed(2)} + depth ${split.log10.depth.toFixed(2)} + tokens/workflow ${split.log10.intensity.toFixed(2)} = ${split.log10.tokens.toFixed(2)}`);
 console.log('\nLevers for the whole business (26-week tokens if the lever is 10% better):');
 for (const r of report.levers.all) console.log(`  ${r.label.padEnd(32)} ${r.scale ? '(scale) ' : '        '}${pct(r.tokensPer10pct)}`);
 if (backtest) {

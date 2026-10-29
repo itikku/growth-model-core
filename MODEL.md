@@ -1,6 +1,6 @@
 # The model
 
-Weekly panel: accounts × weeks, and engaged engineers × weeks. Notation: N = engaged engineers in an account, M = engineers it can reach, τ = an engineer's weeks of use so far.
+Weekly panel: accounts × weeks, and engaged users × weeks. Notation: N = engaged users in an account, M = users it can reach, τ = a user's weeks of use so far.
 
 ## 1. Account funnel
 
@@ -25,9 +25,9 @@ expected new starts = θ · (p + q · N/M) · (M − N)        M = ceiling · se
 expected stops      = c · N
 ```
 
-- **p** (outreach): a reachable engineer starts on their own, or through training, sales, or marketing.
-- **q** (colleagues): a reachable engineer starts through a colleague; the pull grows with the share already using it.
-- **c**: an engaged engineer stops.
+- **p** (outreach): a reachable user starts on their own, or through training, sales, or marketing.
+- **q** (colleagues): a reachable user starts through a colleague; the pull grows with the share already using it.
+- **c**: an engaged user stops.
 - **θ**: the account's own adoption multiplier (observed ÷ expected starts, Poisson–gamma shrinkage with 5 pseudo-starts).
 
 **With start labels** (`started_via` on most starts): outreach and colleague starts are separate Poisson counts, so `p = outreach starts ÷ Σ(M − N)` and `q = colleague starts ÷ Σ(N/M)(M − N)`. The colleague share is counted, with a Wilson interval.
@@ -36,16 +36,16 @@ expected stops      = c · N
 
 **Ceiling**: profile likelihood over ceiling ∈ [max observed N/seats, 1] in steps of 0.05. If the best value is 1 (the top of the search), the ceiling is flagged as censored: the true value may be higher, so report it as "at least" the interval's lower end. Otherwise, if the likelihood-ratio interval is wider than 0.3, the data cannot pin it down; the ceiling is set to 1 and flagged, and ceiling effects become an upper bound.
 
-**Pilot team**: the average number of engineers engaged in an account's first active week.
+**Pilot team**: the average number of users engaged in an account's first active week.
 
-## 3. Learning curve (workflows per engineer)
+## 3. Learning curve (workflows per user)
 
 ```
-E[workflows credited to an engineer in week t] = μ_account · m_t · g(τ)
+E[workflows credited to a user in week t] = μ_account · m_t · g(τ)
 g(τ) = Dmax − (Dmax − D0) · e^(−λτ)
 ```
 
-τ counts the engineer's active weeks in their current spell. m_t absorbs everything that changed over calendar time (launches, seasons) and is normalized to 1 over the last 4 weeks; μ is an account multiplier (shrunk with 20 pseudo-workflows). Fit by block-coordinate Poisson maximum likelihood: (D0, Dmax) by EM on sufficient statistics by τ, λ on a log grid (0.01–3) plus golden-section search, then m_t and μ in closed form. Age and period are separately identified because engineers start at different times.
+τ counts the user's active weeks in their current spell. m_t absorbs everything that changed over calendar time (launches, seasons) and is normalized to 1 over the last 4 weeks; μ is an account multiplier (shrunk with 20 pseudo-workflows). Fit by block-coordinate Poisson maximum likelihood: (D0, Dmax) by EM on sufficient statistics by τ, λ on a log grid (0.01–3) plus golden-section search, then m_t and μ in closed form. Age and period are separately identified because users start at different times.
 
 ## 4. Tokens per workflow
 
@@ -53,13 +53,13 @@ ln K = account level + trend · week, with the trend pooled within accounts over
 
 ## Forecast
 
-Deterministic expected values, 26 weeks, summed over the scope. For each account: the funnel state distribution moves one week at a time; engaged engineers are tracked **per funnel state** as a histogram over tenure (accounts that stay active also accumulate more engineers; averaging them separately understates growth by ~15%); Bass steps happen only in active weeks; the first active week brings the pilot team. New accounts arrive at the fitted rate when the scope can receive them (everything, a region in proportion to its share of accounts, or picked stages that include nascent). No new launches are assumed.
+Deterministic expected values, 26 weeks, summed over the scope. For each account: the funnel state distribution moves one week at a time; engaged users are tracked **per funnel state** as a histogram over tenure (accounts that stay active also accumulate more users; averaging them separately understates growth by ~15%); Bass steps happen only in active weeks; the first active week brings the pilot team. New accounts arrive at the fitted rate when the scope can receive them (everything, a region in proportion to its share of accounts, or picked stages that include nascent). No new launches are assumed.
 
 Accuracy: within ~4% of the mean of 120 stochastic runs on the same parameters; a 12-week backtest on a constant-parameter world lands within ±40% per seed (average +12%).
 
 ## Levers and elasticities
 
-A lever is a parameter. "10% better" means: for weekly account probabilities, 10% fewer failures (stuck, going quiet, staying quiet); for engineer churn, 10% less; for everything else, 10% more. A negative value makes a weekly account probability worse by the gentler of "x% fewer successes" and "x% more failures", so a rate that mostly fails falls smoothly instead of hitting zero. Elasticity = (26-week tokens with the change ÷ baseline − 1) ÷ 10%.
+A lever is a parameter. "10% better" means: for weekly account probabilities, 10% fewer failures (stuck, going quiet, staying quiet); for user churn, 10% less; for everything else, 10% more. A negative value makes a weekly account probability worse by the gentler of "x% fewer successes" and "x% more failures", so a rate that mostly fails falls smoothly instead of hitting zero. Elasticity = (26-week tokens with the change ÷ baseline − 1) ÷ 10%.
 
 Two kinds: **scale levers** (usage at full experience, tokens per workflow) multiply output and read about 1 everywhere; **growth levers** depend on where each account stands, and are the ones that tell you where to focus.
 
@@ -69,12 +69,12 @@ From each account's last 8 weeks, checked in order:
 
 1. **Nascent**: first active in the last 6 weeks, or provisioned under 8 weeks ago and not live yet.
 2. **Stalled**: never active (older), quiet 4+ weeks, active under 4 of the last 8 weeks, or workflows growing under 2% a week.
-3. **Compounding**: growing, and R = θ · q · (1 − N/M) / c ≥ 1 (each engaged engineer brings in more than one replacement before stopping).
+3. **Compounding**: growing, and R = θ · q · (1 − N/M) / c ≥ 1 (each engaged user brings in more than one replacement before stopping).
 4. **Linear**: growing, but R < 1: growth comes from outreach and learning, which level off.
 
 ## Growth split
 
-For a set of weeks S: accounts = active account-weeks ÷ |S|; engineers = engaged ÷ active account-weeks; depth = workflows ÷ engaged; intensity = tokens ÷ workflows. The product is tokens per week, so log10 growth between two sets of weeks splits exactly into the four.
+For a set of weeks S: accounts = active account-weeks ÷ |S|; users = engaged ÷ active account-weeks; depth = workflows ÷ engaged; intensity = tokens ÷ workflows. The product is tokens per week, so log10 growth between two sets of weeks splits exactly into the four.
 
 ## Validation (in `npm test`)
 

@@ -37,7 +37,7 @@ describe('estimators are exact on noiseless data', () => {
     const obs = [];
     for (let tau = 0; tau <= 30; tau++) for (let w = 0; w < 4; w++) obs.push({ accountId: 'a', week: w, tenure: tau, credited: 20 * curve(3, 0.5, 0.2, tau) });
     const ix = { firstWeek: 0, lastWeek: 3, series: [{ account: { id: 'a', seats: 50, provisionedWeek: 0 } }], byId: new Map(), pairs: [], tenureObs: obs };
-    // Each cell holds 20 engineer-weeks' worth of credit in one observation; scale back.
+    // Each cell holds 20 user-weeks' worth of credit in one observation; scale back.
     const fit = fitDepth(ix as never);
     near(fit.dMax / 20, 3, 1e-3);
     near(fit.d0 / 20, 0.5, 1e-3);
@@ -61,7 +61,7 @@ describe('estimators are exact on noiseless data', () => {
   });
 });
 
-describe('fitting recovers known parameters from simulated engineers', () => {
+describe('fitting recovers known parameters from simulated users', () => {
   const fits = [1, 2, 3, 4, 5].map((s) => fitModel(simulatePanel(TRUTH, `rt${s}`), { window: 40 }));
   const mean = (f: (r: FitResult) => number) => fits.reduce((a, r) => a + f(r), 0) / fits.length;
 
@@ -122,7 +122,7 @@ function truthFit(spec: WorldSpec): FitResult {
 }
 
 describe('forecast', () => {
-  // d0 = 1: a new engineer already runs about one workflow a week, so the data's "an active week has a workflow" floor rarely binds.
+  // d0 = 1: a new user already runs about one workflow a week, so the data's "an active week has a workflow" floor rarely binds.
   const spec: WorldSpec = { ...TRUTH, d0: 1, firstWeek: 1, lastWeek: 26, kTrend: 0, tokenNoise: 0, accounts: TRUTH.accounts.map((a) => ({ ...a, provisionedWeek: 1 })) };
   const fit = truthFit(spec);
   const ids = spec.accounts.map((a) => a.id);
@@ -168,7 +168,7 @@ describe('forecast', () => {
     const fresh = Object.fromEntries(elasticities(slow, ['a0'], 0).map((r) => [r.lever, r.tokens]));
     expect(fresh.activation).toBeGreaterThan(3 * fresh.retention);
     expect(fresh.activation).toBeGreaterThan(3 * fresh.recovery);
-    // Saturated: engineers already fill the reachable seats, so more reach beats more outreach.
+    // Saturated: users already fill the reachable seats, so more reach beats more outreach.
     const full = truthFit({ ...spec, accounts: [{ id: 'z', seats: 100, provisionedWeek: 1 }] });
     full.starts = [{ id: 'z', funnel: { kind: 'active' }, tenure: Object.assign(Array(TENURE_CAP + 1).fill(0), { 20: 78 }) }];
     const sat = Object.fromEntries(elasticities(full, ['z'], 0).map((r) => [r.lever, r.tokens]));
@@ -227,15 +227,6 @@ describe('levers', () => {
       for (let i = 1; i < ys.length; i++) expect(ys[i]).toBeGreaterThan(ys[i - 1]);
       expect(ys[0]).toBeGreaterThan(0);
     }
-  });
-
-  it('a better dial never lowers a rate that is already above the 99.5% cap', () => {
-    // Retention of 99.8% a week (an account that rarely churns): the baseline keeps it, and better keeps it.
-    expect(applyLever.retention(0.998, 0)).toBe(0.998);
-    expect(applyLever.retention(0.998, 0.1)).toBe(0.998);
-    expect(applyLever.retention(0.99, 0.9)).toBe(0.995);
-    const ys = [-0.1, -0.05, -0.01, 0, 0.01, 0.1].map((x) => applyLever.retention(0.998, x));
-    for (let i = 1; i < ys.length; i++) expect(ys[i]).toBeGreaterThanOrEqual(ys[i - 1]);
   });
 });
 

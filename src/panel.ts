@@ -1,4 +1,4 @@
-// Turns a Panel into per-account timelines: funnel states, engaged engineers with tenure,
+// Turns a Panel into per-account timelines: funnel states, engaged users with tenure,
 // and the adoption and churn events between consecutive active weeks.
 import { TENURE_CAP, type Panel, type SimAccount } from './types';
 
@@ -13,7 +13,7 @@ export const quiet = (k: number) => 1 + Math.min(QUIET_CAP, k);
 /** `colleague` / `outreach`: adoptions whose start was labeled (see EngineerWeekObs.startedVia). */
 export type BassPair = { accountId: string; from: number; to: number; n: number; adoptions: number; churns: number; colleague: number; outreach: number };
 
-/** One engaged engineer-week with that engineer's tenure (active weeks of experience in the current spell). */
+/** One engaged user-week with that user's tenure (active weeks of experience in the current spell). */
 export type TenureObs = { accountId: string; week: number; tenure: number; credited: number };
 
 export type AccountSeries = {
@@ -24,8 +24,8 @@ export type AccountSeries = {
   tokens: number[];
   active: boolean[];
   state: number[];
-  engaged: number[]; // engaged engineers per week (0 when inactive)
-  /** Engaged engineers by tenure at the last active week. */
+  engaged: number[]; // engaged users per week (0 when inactive)
+  /** Engaged users by tenure at the last active week. */
   lastTenure: number[];
   firstActive: number | null;
   lastActive: number | null;

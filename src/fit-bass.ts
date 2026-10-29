@@ -1,4 +1,4 @@
-// Engineers inside an account follow discrete Bass diffusion with churn:
+// Users inside an account follow discrete Bass diffusion with churn:
 //   expected adoptions between active weeks = θ_i · (p + q · N/M) · (M − N),   M = ceiling · seats
 //   expected churn                           = c_i · N
 // p: adoption from outreach. q: adoption from colleagues. Fit (p, q) by Poisson EM, the ceiling by
@@ -76,7 +76,7 @@ export function fitBass(ix: PanelIndex, window: number): BassFit {
   const tagged = pairs.reduce((a, p) => a + p.colleague + p.outreach, 0);
   const labeled = total > 0 && tagged / total >= 0.8;
 
-  // The ceiling must leave room for every engineer observed engaged.
+  // The ceiling must leave room for every user observed engaged.
   let minCeiling = CEILING_STEP;
   for (const s of ix.series) for (const n of s.engaged) minCeiling = Math.max(minCeiling, n / Math.max(1, s.account.seats));
   const grid: number[] = [];

@@ -5,7 +5,7 @@ A small, dependency-free growth model for usage-based B2B products. It fits your
 Every week:
 
 ```
-tokens = active accounts × engaged engineers per account × workflows per engineer × tokens per workflow
+tokens = active accounts × engaged users per account × workflows per user × tokens per workflow
 ```
 
 Each part has standard, testable math behind it:
@@ -13,13 +13,13 @@ Each part has standard, testable math behind it:
 | Part | Model | What moves it |
 |---|---|---|
 | Active accounts | Weekly account funnel (Markov chain): not live yet → active → quiet 1–12+ weeks → back | Activation, retention, win-back, new accounts |
-| Engaged engineers per account | Bass diffusion with churn: people start through **outreach (p)** or **colleagues (q)**, up to the engineers the account can reach | p, q, churn, reach |
-| Workflows per engineer | Learning curve over each person's weeks of use | Learning speed, usage at full experience |
+| Engaged users per account | Bass diffusion with churn: people start through **outreach (p)** or **colleagues (q)**, up to the users the account can reach | p, q, churn, reach |
+| Workflows per user | Learning curve over each person's weeks of use | Learning speed, usage at full experience |
 | Tokens per workflow | Level plus a damped trend | Bigger jobs, batches, heavier workloads |
 
 Because the parts multiply, past growth splits **exactly** into the four, and the forecast tells you which lever matters most **from where each account stands today**: retention barely matters for accounts that never get started; activation is worth nothing for accounts that are already live.
 
-"Engineer" here means any person who holds a seat: the sample data come from an engineering tool, but nothing in the math is specific to it.
+A user is any person who holds a seat. The file and field names say "engineer" (`engineer_weeks.csv`, `engineer_id`) because the sample data come from an engineering tool, but nothing in the math is specific to it.
 
 ## Quick start
 

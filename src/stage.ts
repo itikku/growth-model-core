@@ -1,7 +1,7 @@
 // Growth stage of each account at the last observed week, from its last 8 weeks. Rules, in order:
 //   nascent:     not active yet and provisioned under 8 weeks ago, or first active in the last 6 weeks
 //   stalled:     never active (older), quiet 4+ weeks, active under 4 of the last 8 weeks, or workflows growing < 2%/week
-//   compounding: growing, and each engaged engineer brings in more than one replacement before stopping (R ≥ 1)
+//   compounding: growing, and each engaged user brings in more than one replacement before stopping (R ≥ 1)
 //   linear:      growing, but R < 1: growth comes from outreach and learning, which level off
 //   R = θ · q · (1 − N/M) / c
 import type { PanelIndex } from './panel';
